@@ -210,10 +210,10 @@ date_specific_files <- list(
 
 
 # Load CSV containing start and end times for each date
-time_window <- read.csv("/mnt/EAS_ind/vdemartsev/analysis/Meerkats/recruitment_experiments/meta_data/time_startend_info-copy.csv", sep = ",")
+time_window <- read.csv("/mnt/EAS_ind/aeiberle/data/metaData/time_startend_info-copy.csv", sep = ",")
 
 #load playback metadata
-playback_details <- read.csv("/mnt/EAS_ind/vdemartsev/analysis/Meerkats/recruitment_experiments/meta_data/Copy of PB_time_startend_info-copy.csv", sep = ",")
+playback_details <- read.csv("/mnt/EAS_ind/aeiberle/data/metaData/Copy of PB_time_startend_info-copy.csv", sep = ",")
 
 # Assuming the CSV has columns "Date", "t0" (start time), and "t1" (end time)
 # Convert the Date column to POSIXlt to match the date format
@@ -340,11 +340,9 @@ for (date in names(date_specific_files)) {
  
 ##   sf_obj <- st_as_sf(aggregated_gps_data, coords = c("lon", "lat"), crs = 4326, agr = "constant")
 ##   
-##   
 ##   ggplot() +
 ##     geom_sf(data = sf_obj, aes(color = ID), size = 2) +
-##     theme_bw()
-##   
+##     theme_bw()  
 ##   
 ##   # Coordinates for the speaker location
 ##   speaker <- data.frame(lon = lon, lat = lat)
@@ -355,9 +353,7 @@ for (date in names(date_specific_files)) {
 ##     theme_bw() + ggtitle(group)+
 ##   transition_time(re_numeric) +
 ##     labs(title = "Time: {frame_time}") +
-##     shadow_wake(wake_length = 0.1,  alpha = 0.5)
-##   
-##     
+##     shadow_wake(wake_length = 0.1,  alpha = 0.5)  
 ##   
 ##   b <- animate(p, nframes = 100, fps = 5)
 ##   
@@ -399,13 +395,16 @@ aggregated_gps_data_all <- aggregated_gps_data_all %>%
   group_by(trial)%>% 
   mutate(Z_dist = rescale(dist, to=c(0,1)))
 
+# rename treatment
+aggregated_gps_data_all <- aggregated_gps_data_all %>%
+  mutate(treatment = recode(treatment, "audio_poop" = "audio_feces"))
 
 #write.csv(aggregated_gps_data_all, file = "/mnt/EAS_ind/aeiberle/data/distance_to_speaker.csv", row.names = FALSE)
 
 
 output_dir <- "/mnt/EAS_ind/aeiberle/data/Plots/NEW/"
 
-#plot stuff
+#plot mean distance to speaker across all trials
 dist_all_plot <- ggplot(data = aggregated_gps_data_all, aes(x = re_numeric, y = Z_dist)) + geom_smooth(method = "gam") + 
   geom_vline(xintercept = 0, linetype = "dotted", color = "red", size = 1.5) + 
   geom_vline(xintercept = c(-60, 60), linetype = "dotted", color = "grey", size = 1) + 
@@ -429,7 +428,7 @@ dist_all_plot <- ggplot(data = aggregated_gps_data_all, aes(x = re_numeric, y = 
 print(dist_all_plot)
 # ggsave(filename = paste0(output_dir, "distance_norm_all_plot.png"), plot = dist_all_plot, width = 18, height = 9)
 
-
+#plot mean distance to speaker by treatment across all trials
 dist_treatment_plot <- ggplot(data = aggregated_gps_data_all, aes(x = re_numeric, y = Z_dist, colour = treatment)) + geom_smooth() + 
   geom_vline(xintercept = 0, linetype="dotted", color = "black", size = 1.5) + 
   geom_vline(xintercept = c(-60, 60), linetype="dotted", color = "grey", size = 1) + 
@@ -453,7 +452,7 @@ dist_treatment_plot <- ggplot(data = aggregated_gps_data_all, aes(x = re_numeric
 print(dist_treatment_plot)
 # ggsave(filename = paste0(output_dir, "distance_norm_treatment_plot.png"), plot = dist_treatment_plot, width = 18, height = 9)
 
-
+#plot mean distance to speaker by group
 dist_group_plot <- ggplot(data = aggregated_gps_data_all, aes(x = re_numeric, y = Z_dist, colour = group)) + geom_smooth() + 
   geom_vline(xintercept = 0, linetype="dotted", color = "black", size = 1.5) + 
   geom_vline(xintercept = c(-60, 60), linetype="dotted", color = "grey", size = 1) + 
@@ -515,7 +514,7 @@ data_chunks$end <- as.POSIXct(data_chunks$end, tz = "UTC")
 ##    #make Xs and Ys matrices
    reformat_movebank_to_matrix(
       aggregated_gps_data_all_test,
-      output_file_path = "/mnt/EAS_ind/vdemartsev/analysis/Meerkats/recruitment_experiments/meta_data/GPS_matrices.RData",
+      output_file_path = "/mnt/EAS_ind/aeiberle/data/RDataFiles/GPS_matrices.RData",
       ids = NULL,
       data_chunks = data_chunks,
       seconds_per_time_step = 1,
@@ -533,14 +532,14 @@ data_chunks$end <- as.POSIXct(data_chunks$end, tz = "UTC")
 
 ##    
 #load matrices
-load("/mnt/EAS_ind/vdemartsev/analysis/Meerkats/recruitment_experiments/meta_data/GPS_matrices.RData")
+load("/mnt/EAS_ind/aeiberle/data/RDataFiles/GPS_matrices.RData")
 
 #calculate dyadic distances
 distances <- get_group_dyadic_distances(xs, ys)
 #get means
 mean_dist <- apply(distances, 3, mean, na.rm = T )
 
-#add date-times to the mead dyadic distances
+#add date-times to the mean dyadic distances
 meean_dist <- cbind(data.frame(timestamps), mean_dist)
 meean_dist$date <- stringr::str_sub(meean_dist$timestamps, 1, 10)
 meean_dist$numeric <- as.numeric(meean_dist$timestamps)
