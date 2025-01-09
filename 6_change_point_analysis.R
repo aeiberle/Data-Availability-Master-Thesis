@@ -24,9 +24,6 @@ test$PB_index <- ifelse( test$time_bins < 20, "pre", "post")
 
 
 
-
-library(changepoint)
-
 test_2 <- all_call_data %>%
   group_by(date,  time_bins) %>%
   count(label_name)
@@ -131,7 +128,7 @@ iter <- iter+1
 p <- ggplot() 
 
 
-for (lay in 1:1000) {
+for (lay in 1:999) {
  p <- p + geom_density(data = random_data[[lay]], aes(x = change), , adjust = 0.4, colour = "lightgrey", alpha = 0.5)
 }
 
@@ -155,7 +152,7 @@ for (call_type in c("agg", "al", "cc", "ld", "mo", "s", "soc")) {
 after_pb <- c()
 before_pb <- c()
 
-for (lay in 1:1000) {
+for (lay in 1:999) {
 data <-  random_data[[lay]]
 after_pb <- c(after_pb, length(which(data$call_type == call_type & data$change %in% c(20,21))))
 before_pb <- c(before_pb, length(which(data$call_type == call_type & data$change %in% c(18,19))))
