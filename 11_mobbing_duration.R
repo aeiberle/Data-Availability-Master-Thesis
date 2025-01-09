@@ -6,7 +6,7 @@ library(dplyr)
 library(ggpubr)
 library(performance)
 
-setwd("/mnt/EAS_ind/vdemartsev/analysis/Meerkats/recruitment_experiments")
+setwd("/mnt/EAS_ind/aeiberle/data/")
 
 #setting the distance from the speaker
 dist_tresh <- 3
@@ -96,7 +96,7 @@ all_mob_time_summary <- subset(all_mob_time_summary, duration > 0)
 
 
 
-metadata <- read.csv("/mnt/EAS_ind/vdemartsev/analysis/Meerkats/recruitment_experiments/meta_data/time_startend_info-copy.csv")
+metadata <- read.csv("/mnt/EAS_ind/aeiberle/data/metaData/time_startend_info-copy.csv")
 metadata$track <- c("PB_3", "PB_6",
                     "PB_3", "PB_6",
                     "PB_3", "PB_6",
@@ -177,7 +177,7 @@ library(emmeans)
 
 all_mob_time_summary$track <- as.factor(all_mob_time_summary$track)
 
-#GLMM "Mobbing Duration"
+##GLMM "Mobbing Duration"
 #duration
 simple_model <- glmmTMB(data = all_mob_time_summary, formula = duration ~ treatment + track + (1|ID), family = "lognormal")
 simulationOutput <- simulateResiduals(fittedModel = simple_model, plot = T)
@@ -242,40 +242,9 @@ print(EMM_plot)
 tab_model(full_model)
 
 
-# #time of arrival
-# simple_model_2 <- glmmTMB(data = all_mob_time_summary, formula = TOA ~ treatment + track + (1|ID), family = "lognormal")
-# simulationOutput <- simulateResiduals(fittedModel = simple_model_2, plot = T)
-# 
-# full_model_2 <- glmmTMB(data = all_mob_time_summary, formula = TOA ~ treatment * track + (1|ID), family = "lognormal")
-# simulationOutput <- simulateResiduals(fittedModel = full_model_2, plot = T)
-# summary(full_model_2)
-# 
-# EMM_2 <- emmeans(full_model_2, poly ~ treatment | track)
-# plot(EMM_2)
-# plot_model(full_model_2, type = "int")
-# tab_model(full_model_2)
 
-
-
-#GLMM "TOA data"
+#äGLMM "TOA data"
 all_mob_time_summary_filtered$track <- as.factor(all_mob_time_summary_filtered$track)
-
-# #duration
-# simple_model_filtered <- glmmTMB(data = all_mob_time_summary_filtered, formula = duration ~ treatment + track + (1|ID), family = "lognormal")
-# simulationOutput <- simulateResiduals(fittedModel = simple_model_filtered, plot = T)
-# summary(simple_model_filtered)
-# 
-# full_model_filtered <- glmmTMB(data = all_mob_time_summary_filtered, formula = duration ~ treatment * track + (1|ID), family = "lognormal")
-# #run model diagnostic with DHARMa
-# simulationOutput_filtered <- simulateResiduals(fittedModel = full_model_filtered, plot = T)
-# summary(full_model_filtered)
-# 
-# EMM_filtered <- emmeans(full_model_filtered, poly ~ treatment | track)
-# plot(EMM_filtered)
-# 
-# plot_model(full_model_filtered, type = "int") #plot interaction
-# plot_model(full_model_filtered, type = "est") #plot estimates
-# tab_model(full_model_filtered)
 
 #time of arrival = Recruitment Duration
 simple_model_2_filtered <- glmmTMB(data = all_mob_time_summary_filtered, formula = TOA ~ treatment + track + (1|ID), family = "lognormal")
