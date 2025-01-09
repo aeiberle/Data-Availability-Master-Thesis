@@ -1,11 +1,11 @@
-#analyse the pulls and anchor data
+## Analysis of the pulls and anchor data
 
-#we transform the events table into matrices and count each pull as 1 point
-#  of influence. Fission is -1 point of influence
-# anchors are counted as sequential fission and pull. So the
-# initiator is getting -1  and the responded +1
+# Transform the events table into matrices and count each pull as 1 point of influence. 
+# Fission is -1 point of influence
+# Anchors are counted as sequential fission and pull
+# Initiator is getting -1 and the responded +1
 
-load("/mnt/EAS_ind/vdemartsev/analysis/Meerkats/recruitment_experiments/pulls&anchors.Rdata")
+load("/mnt/EAS_ind/aeiberle/data/RDataFiles/pulls&anchors.Rdata")
 
 library(tidyverse)
 library(igraph)
@@ -87,14 +87,7 @@ for (day in unique_dates) {
   }
   #make sure all values are positive
   matrix <- matrix+10
-##  # Normalize the matrix by row (individual influence)
-##  for (row_index in 1:nrow(matrix)) {
-##    row_sum <- sum(matrix[row_index, ], na.rm = TRUE) #Sum of the row ignoring NAs
-##    if (row_sum != 0) { #Avoid division by 0
-##      matrix[row_index, ] <- matrix[row_index, ] / row_sum
-##    }
-##  }
-  
+    
      #normalization_method == "mean" (global influence)
     matrix_mean <- mean(matrix, na.rm = TRUE)
     matrix_sd <- sd(matrix, na.rm = TRUE)
@@ -144,8 +137,6 @@ for (matrix_name in names(influence_matrices)) {
 #Convert batch to factor for correct plotting order
 combined_df$batch <- factor(combined_df$batch)
 combined_df$condition <- factor(combined_df$condition, levels = c("before", "after")) #Order the conditions
-
-
 
 
 # Calculate observed means
@@ -244,8 +235,6 @@ output_dir <- "/mnt/EAS_ind/aeiberle/data/Models/"
 
 #Testing the change in influence between Control and Playback conditions
 #We set nested random effects as we have repeated measures by trial and also by individuals  
-
-
 
 # we cant fit one full factorial model with Dominance, Sex and Age since some combinations are missing and we
 # lose categories
@@ -366,7 +355,7 @@ model_2 <- grid.arrange(interaction_plot_model2, default_plot_model2, ncol = 2)
 tab_model(model_age_sex)
 
 
-#Yearlings appear to be loosing influence (barely significant but lest do a post hoc just for LOLz
+#Yearlings appear to be loosing influence (barely significant but lest do a post hoc just for fun
 #making an emmeans grid and specifying what to test
 # we are only interested in the significant effects so will add AGE
 EMM <- emmeans(model_age_sex, ~ Age )
@@ -376,7 +365,7 @@ plot(EMM, comparisons = TRUE)
 
 
 
-#Testing the absolute influence during Playback conditions
+##Testing the absolute influence BEFORE Playback conditions
 
 #dom*sex model 3
 model_dom_sex_abs <- glmmTMB(after ~ Dominance * Sex  + (1|individual_id) + (1|trial), data = individual_differences, family = gaussian)
@@ -400,7 +389,7 @@ plot_model(model_age_sex_abs)
 tab_model(model_age_sex_abs)
 
 
-#Testing the absolute influence AFTER Playback conditions
+##Testing the absolute influence AFTER Playback conditions
 
 #dom*sex model 5
 model_dom_sex_base <- glmmTMB(before ~ Dominance * Sex  + (1|individual_id) + (1|trial), data = individual_differences, family = gaussian)
