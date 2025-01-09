@@ -1,7 +1,7 @@
-# GOAL: Plotting the occurrence of each call type in the form of density ridgeline plots
-#       The plot should have all call types on the y-axis plotted over the time, ideally having to vertical lines showing the Playback duration
-#       For each individual on a give trial/day and entire trial/day --> only audio needed
-#       Adding group composition information to each individual especially the plots with all individuals in it
+# Plotting the occurrence of each call type in the form of density ridgeline plots
+# The plot should have all call types on the y-axis plotted over the time of 120 seconds, ideally having to vertical lines showing the Playback duration
+# For each individual on a give trial/day and entire trial/day --> only audio needed
+# Adding group composition information to each individual especially the plots with all individuals in it
 
 # Load libraries
 library(ggplot2)
@@ -15,14 +15,10 @@ library(gridExtra)
 
 output_dir <- "/mnt/EAS_ind/aeiberle/data/Plots/NEW/"
 
-# Read in the CSV file
+# Read in the CSV file of audio data
 audio_df_orig <- read.csv(file = "/mnt/EAS_ind/aeiberle/data/labels_synched_2023_preGD.csv", header = TRUE, sep = ",")
 
-# Re-name id_code's
-# audio_df_orig <- audio_df_orig %>%
-#   mutate(id_code = ifelse(id_code == "VSIF10", "VSIF010",
-#                    ifelse(id_code == "VSIF021", "VSIM021", id_code)))
-
+# Read in the CSV file of group composition data for each individual
 composition_df <- read.csv(file = "/mnt/EAS_ind/aeiberle/data/GroupComposition_complete.csv", header = TRUE, sep = ";")
 
 composition_df$ID <- as.character(composition_df$ID)
@@ -94,25 +90,7 @@ color_mapping_pos <- setNames(density_palette_pos, social_categories)
 # Define colors for each age and generating a palette
 ages <- unique(audio_day$Age)
 num_ages <- length(ages)
-# density_palette_ages <- colorRampPalette(brewer.pal(8, "Set1"))(num_ages)
-# color_mapping_ages <- setNames(density_palette_pos, ages)
 
-# # Define colors for each individual (id_code) and generating a palette for unique individuals
-# id_codes <- unique(audio_day$id_code)
-# num_id_codes <- length(id_codes)
-# individual_palette <- colorRampPalette(brewer.pal(8, "Set3"))(num_id_codes)
-# id_code_colors <- setNames(individual_palette, id_codes)
-
-# color_mapping_sex <- c("male" = "turquoise", "female" = "plum2") 
-
-# # Define shapes based on position and age
-# unique_positions <- unique(audio_day$Position)
-# shape_mapping <- c(16, 17, 18, 19, 15)
-# position_shapes <- setNames(shape_mapping[1:length(unique_positions)], unique_positions)
-# 
-# unique_ages <- unique(audio_day$Age)
-# age_mapping <- c(16, 17, 18)
-# age_shapes <- setNames(shape_mapping[1:length(unique_ages)], unique_ages)
 
 #### LOOP: Ridgeline plot for each date with color-coded id_codes ####
 # Loop through each specific date
@@ -359,9 +337,9 @@ female_density_plot <- ggplot(audio_female, aes(x = t0_timediff, y = label_name,
 combined_sex_plot <- grid.arrange(male_density_plot, female_density_plot, nrow = 1)
 
 # Optionally save each plot or the combined grid
-ggsave(filename = paste0(output_dir, "density_calls_sex_male_plot_120s.png"), plot = male_density_plot, width = 18, height = 9)
-ggsave(filename = paste0(output_dir, "density_calls_sex_female_plot_120s.png"), plot = female_density_plot, width = 18, height = 9)
-ggsave(filename = paste0(output_dir, "density_calls_sexes_plot_120s.png"), plot = combined_sex_plot, width = 18, height = 9)
+# ggsave(filename = paste0(output_dir, "density_calls_sex_male_plot_120s.png"), plot = male_density_plot, width = 18, height = 9)
+# ggsave(filename = paste0(output_dir, "density_calls_sex_female_plot_120s.png"), plot = female_density_plot, width = 18, height = 9)
+# ggsave(filename = paste0(output_dir, "density_calls_sexes_plot_120s.png"), plot = combined_sex_plot, width = 18, height = 9)
 
 
 #### Ridgeline plot for all call_types of all individuals ####
@@ -401,12 +379,10 @@ if (nrow(audio_combined_calls_total) > 0) {
   print(combined_density_calls_total_plot)
   
   # Save the plot
-  ggsave(filename = paste0(output_dir, "density_calls_total_plot_120s.png"), plot = combined_density_calls_total_plot, width = 18, height = 9)
+  # ggsave(filename = paste0(output_dir, "density_calls_total_plot_120s.png"), plot = combined_density_calls_total_plot, width = 18, height = 9)
   
 }
 
 # # Counts of calls on position
 # table(audio_day$label_name, audio_day$Position)
 # table(audio_day$Position, audio_day$id_code)
-
-
