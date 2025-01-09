@@ -1,6 +1,6 @@
-#stats for the call density plots
+## Stats for the call density plots
 
-setwd("/mnt/EAS_ind/vdemartsev/analysis/Meerkats/recruitment_experiments")
+setwd("/mnt/EAS_ind/aeiberle/data/RDataFiles/")
 
 #load all audio data
 load("all_call_data.Rdata")
@@ -67,7 +67,7 @@ cumulative_change <- ggplot(data = all_cpts, aes(x = change )) + geom_density() 
 #generate permuted data sets 
 set.seed = 42
 #make a list to store everything
-iterations <- 500
+iterations <- 1000
 random_data <-list()
 
 
@@ -131,7 +131,7 @@ iter <- iter+1
 p <- ggplot() 
 
 
-for (lay in 1:499) {
+for (lay in 1:1000) {
  p <- p + geom_density(data = random_data[[lay]], aes(x = change), , adjust = 0.4, colour = "lightgrey", alpha = 0.5)
 }
 
@@ -155,7 +155,7 @@ for (call_type in c("agg", "al", "cc", "ld", "mo", "s", "soc")) {
 after_pb <- c()
 before_pb <- c()
 
-for (lay in 1:499) {
+for (lay in 1:1000) {
 data <-  random_data[[lay]]
 after_pb <- c(after_pb, length(which(data$call_type == call_type & data$change %in% c(20,21))))
 before_pb <- c(before_pb, length(which(data$call_type == call_type & data$change %in% c(18,19))))
