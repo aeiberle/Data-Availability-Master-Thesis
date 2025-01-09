@@ -1,4 +1,4 @@
-#### LOOP for displaying kernel densities plot for a given time window ####
+#### Displaying plots for mean distances to speaker for a given time window ####
 ### using all available GPS data
 
 library(sp)
