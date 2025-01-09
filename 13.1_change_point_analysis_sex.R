@@ -1,6 +1,6 @@
-#stats for the call density plots
+## Stats for the call density plots between sexes
 
-setwd("/mnt/EAS_ind/vdemartsev/analysis/Meerkats/recruitment_experiments")
+setwd("/mnt/EAS_ind/aeiberle/data/RDataFiles/")
 
 #load all audio data
 load("all_call_data.Rdata")
@@ -21,7 +21,6 @@ test <- all_call_data %>%
 
 #add pre-post playback indicator
 test$PB_index <- ifelse( test$time_bins < 20, "pre", "post")
-
 
 
 test_2 <- all_call_data %>%
@@ -63,9 +62,8 @@ ggplot(data = all_cpts, aes(x = change )) + geom_density() + facet_grid(call_typ
 #generate permuted data sets 
 set.seed = 42
 #make a list to store everything
-iterations <- 500
+iterations <- 1000
 random_data <-list()
-
 
 
 iter <- 1
@@ -128,14 +126,11 @@ while (iter <= iterations) {
 }
 
 
-
-
-
 #plot cumulative change per call_type
 p <- ggplot() 
 
 
-for (lay in 1:499) {
+for (lay in 1:999) {
  p <- p + geom_density(data = random_data[[lay]], aes(x = change, color = sex), adjust = 0.4, alpha = 0.5)
 }
 
@@ -161,7 +156,7 @@ for (call_type in c("agg", "al", "cc", "ld", "mo", "s", "soc")) {
     before_pb <- c()
     
     # Loop over each iteration of the random data
-    for (lay in 1:499) {
+    for (lay in 1:999) {
       data <- random_data[[lay]]
       
       # Count occurrences for the given sex and call type in the "after" and "before" segments
