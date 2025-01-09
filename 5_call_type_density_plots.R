@@ -1,7 +1,7 @@
-# GOAL: Plotting the occurrence of each call type in the form of density ridgeline plots
-#       The plot should have all call types on the y-axis plotted over the time, ideally having to vertical lines showing the Playback duration
-#       For each individual on a give trial/day and entire trial/day --> only audio needed
-#       Adding group composition information to each individual especially the plots with all individuals in it
+# Plotting the occurrence of each call type in the form of density ridgeline plots
+# The plot should have all call types on the y-axis plotted over the time, ideally having to vertical lines showing the Playback duration
+# For each individual on a give trial/day and entire trial/day --> only audio needed
+# Adding group composition information to each individual especially the plots with all individuals in it
 
 # Load libraries
 library(ggplot2)
@@ -15,14 +15,10 @@ library(gridExtra)
 
 output_dir <- "/mnt/EAS_ind/aeiberle/data/Plots/NEW/"
 
-# Read in the CSV file
+# Read in the CSV file of audio data
 audio_df_orig <- read.csv(file = "/mnt/EAS_ind/aeiberle/data/labels_synched_2023_preGD.csv", header = TRUE, sep = ",")
 
-# Re-name id_code's
-# audio_df_orig <- audio_df_orig %>%
-#   mutate(id_code = ifelse(id_code == "VSIF10", "VSIF010",
-#                    ifelse(id_code == "VSIF021", "VSIM021", id_code)))
-
+# Read in the CSV file of group composition data of each individual
 composition_df <- read.csv(file = "/mnt/EAS_ind/aeiberle/data/GroupComposition_complete.csv", header = TRUE, sep = ";")
 
 composition_df$ID <- as.character(composition_df$ID)
@@ -94,25 +90,7 @@ color_mapping_pos <- setNames(density_palette_pos, social_categories)
 # Define colors for each age and generating a palette
 ages <- unique(audio_day$Age)
 num_ages <- length(ages)
-# density_palette_ages <- colorRampPalette(brewer.pal(8, "Set1"))(num_ages)
-# color_mapping_ages <- setNames(density_palette_pos, ages)
-# 
-# # Define colors for each individual (id_code) and generating a palette for unique individuals
-# id_codes <- unique(audio_day$id_code)
-# num_id_codes <- length(id_codes)
-# individual_palette <- colorRampPalette(brewer.pal(8, "Set3"))(num_id_codes)
-# id_code_colors <- setNames(individual_palette, id_codes)
-# 
-# color_mapping_sex <- c("male" = "turquoise", "female" = "plum2") 
-# 
-# # Define shapes based on position and age
-# unique_positions <- unique(audio_day$Position)
-# shape_mapping <- c(16, 17, 18, 19, 15)
-# position_shapes <- setNames(shape_mapping[1:length(unique_positions)], unique_positions)
-# 
-# unique_ages <- unique(audio_day$Age)
-# age_mapping <- c(16, 17, 18)
-# age_shapes <- setNames(shape_mapping[1:length(unique_ages)], unique_ages)
+
 
 #### LOOP: Ridgeline plot for each date with color-coded id_codes ####
 # Loop through each specific date
@@ -211,7 +189,6 @@ for (specific_date in specific_dates) {
     
   }
 }
-
 
 
 #### LOOP: Ridgeline plot for each individual on a date ####
@@ -471,154 +448,3 @@ if (nrow(audio_combined_calls_total) > 0) {
 # # Counts of calls on position
 # table(audio_day$label_name, audio_day$Position)
 # table(audio_day$Position, audio_day$id_code)
-
-
-#### SUPPLEMENTS TO CREATE RIDGELINE PLOTS MANUALLY ####
-### Ridgeline plot for one specific date manually ###
-# # Manually defining a bright custom color palette
-# density_palette <- c(
-#   "#FF5777", "#33FF57", "#3357FF", "#FF33A8",
-#   "#33FFF5", "#F5FF33", "#CCD933", "#B533FF",
-#   "#FFC300", "#900C3F", "#FF5733", "#AA8D99",
-#   "#DAF7A6", "#571845", "#C70039", "#C79111",
-#   "#C511EE", "#3F3F57", "#3CC5FF", "#FE99A1",
-#   "#11FEA1", "#F5AA77", "#B99999", "#AA5777",
-#   "#BBB300", "#300B9F", "#FF2123", "#5755CC"
-# )
-# 
-# # Define the specific date to filter
-# specific_date <- as.Date("2023-07-16")
-# 
-# # Filter the data for the specific date
-# audio_day_filtered <- audio_day %>%
-#   filter(date == specific_date) %>%
-#   filter(!is.na(label_name) & label_name != "" & label_name != "Recruitment Playback Track")
-# 
-# # Generate the ridgeline plot for the specific date
-# combined_density_plot <- ggplot(audio_day_filtered, aes(x = t0_UTC, y = label_name, fill = label_name)) +
-#   geom_density_ridges(alpha = 1, scale = 0.7, show.legend = FALSE) +
-#   geom_point(aes(x = t0_UTC, y = label_name, color = id_code), size = 1.5, alpha = 1,
-#              position = position_jitter(width = 0, height = 0)) +
-#   geom_vline(aes(xintercept = as.numeric(t0)), linetype = "dashed", color = "red", linewidth = 0.5) +  # Playback start
-#   geom_vline(aes(xintercept = as.numeric(t1)), linetype = "dashed", color = "red", linewidth = 0.5) +  # Playback end
-#   scale_x_datetime(date_labels = "%H:%M", date_breaks = "5 min") +
-#   scale_fill_manual(values = color_mapping_calls, guide = "none") +
-#   scale_color_manual(values = id_code_colors, name = "Individual ID") +
-#   labs(title = paste("Density Ridgeline Plot of Call Types for", specific_date, "with Playback Duration"),
-#        x = "Time",
-#        y = "Call Type") +
-#   theme_ridges() +
-#   theme_minimal() +
-#   theme(plot.background = element_rect(fill = "white", color = NA),
-#         panel.background = element_rect(fill = "white", color = NA),
-#         panel.grid.major = element_line(color = "gray80"),
-#         panel.grid.minor = element_line(color = "gray90"),
-#         axis.title.x = element_text(size = 14),
-#         axis.title.y = element_text(size = 14),
-#         axis.text.x = element_text(size = 12),
-#         axis.text.y = element_text(size = 12),
-#         legend.title = element_text(size = 14),
-#         legend.text = element_text(size = 12),
-#         legend.position = "right")
-# 
-# # Print the plot
-# print(combined_density_plot)
-# 
-# # Save the plot for the specific date/trial
-# #ggsave(filename = paste0(output_dir, gsub("-", "", specific_date), "_density_calls_plot_combined", ".png"), plot = combined_density_plot)
- 
- 
-
-### Ridgeline plot for each individual manually ###
-# # Manually specify the individual and date to plot
-# current_individual <- "VMPF035"         # Replace with the desired "id_code"
-# current_date <- as.Date("2023-07-16")   # Replace with the desired "date"
-# 
-# # Filter the data for the specified individual and date
-# audio_day_filtered <- audio_day %>%
-#   filter(date == current_date & id_code == current_individual) %>%
-#   filter(!is.na(label_name) & label_name != "")
-# 
-# # Proceed only if there is data for the individual on the given date
-# if (nrow(audio_day_filtered) > 0) {
-#   # Generate the ridgeline plot
-#   individual_density_plot <- ggplot(audio_day_filtered, aes(x = t0_UTC, y = label_name, fill = label_name)) +
-#     geom_density_ridges(alpha = 0.7, scale = 0.6, show.legend = FALSE) +    # change scale so it doesn't overlap other densities
-#     geom_point(aes(x = t0_UTC, y = label_name), color = "black", size = 1.5, alpha = 1,
-#                position = position_jitter(width = 0, height = 0)) +
-#     geom_vline(aes(xintercept = as.numeric(t0)), linetype = "dashed", color = "red", linewidth = 0.5) +  # Playback start
-#     geom_vline(aes(xintercept = as.numeric(t1)), linetype = "dashed", color = "red", linewidth = 0.5) +  # Playback end
-#     scale_x_datetime(date_labels = "%H:%M", date_breaks = "5 min") +
-#     scale_fill_manual(values = color_mapping_calls, guide = "none") +
-#     labs(title = paste("Density Ridgeline Plot of Call Types for", current_individual, "on", format(current_date, "%Y-%m-%d")),
-#          x = "Time",
-#          y = "Call Type") +
-#     theme_ridges() +
-#     theme_minimal() +
-#     theme(plot.background = element_rect(fill = "white", color = NA),
-#           panel.background = element_rect(fill = "white", color = NA),
-#           panel.grid.major = element_line(color = "gray80"),
-#           panel.grid.minor = element_line(color = "gray90"),
-#           axis.title.x = element_text(size = 14),
-#           axis.title.y = element_text(size = 14),
-#           axis.text.x = element_text(size = 12),
-#           axis.text.y = element_text(size = 12),
-#           legend.position = "none")
-#   
-#   # Print the plot
-#   print(individual_density_plot)
-# }
-# 
-# # Save the plot for the specific individual on a date/trial
-# #ggsave(filename = paste0(output_dir, format(current_date, "%Y%m%d"), "_density_plot_", current_individual, ".png"), plot = individual_density_plot)
-# 
-
-
-# LOOP: Ridgeline plot for each date with color-coded sex status
-# for (specific_date in specific_dates) {
-#   
-#   specific_date <- as.Date(specific_date)
-#   
-#   # Filter the data for the specific date
-#   audio_day_combined <- audio_day %>%
-#     filter(date == specific_date) %>%
-#     filter(!is.na(label_name) & label_name != "" & label_name != "Recruitment Playback Track")
-#   
-#   # Check if there is data for the specific date
-#   if (nrow(audio_day_combined) > 0) {
-#     # Generate the ridgeline plot for the specific date
-#     combined_density_sex_plot <- ggplot(audio_day_combined, aes(x = t0_UTC, y = label_name, fill = label_name)) +
-#       geom_density_ridges(alpha = 1, scale = 0.7, show.legend = FALSE) +
-#       geom_point(aes(x = t0_UTC, y = label_name, color = Sex),  # Color by Sex
-#                  size = 2, alpha = 1, 
-#                  position = position_jitter(width = 0, height = 0)) +
-#       geom_vline(aes(xintercept = as.numeric(t0)), linetype = "dashed", color = "red", linewidth = 0.5) +  # Playback start
-#       geom_vline(aes(xintercept = as.numeric(t1)), linetype = "dashed", color = "red", linewidth = 0.5) +  # Playback end
-#       scale_x_datetime(date_labels = "%H:%M", date_breaks = "5 min") +
-#       scale_fill_manual(values = color_mapping_calls, guide = "none") +
-#       scale_color_manual(values = c("male" = "chartreuse", "female" = "darkturquoise"), name = "Sex") +  # Color mapping for sex
-#       labs(title = paste("Density Ridgeline Plot of Call Types for", specific_date, "with Playback Duration"),
-#            x = "Time",
-#            y = "Call Type") +
-#       theme_ridges() +
-#       theme_minimal() +
-#       theme(plot.background = element_rect(fill = "white", color = NA),
-#             panel.background = element_rect(fill = "white", color = NA),
-#             panel.grid.major = element_line(color = "gray80"),
-#             panel.grid.minor = element_line(color = "gray90"),
-#             axis.title.x = element_text(size = 16),
-#             axis.title.y = element_text(size = 16),
-#             axis.text.x = element_text(size = 14),
-#             axis.text.y = element_text(size = 14),
-#             legend.title = element_text(size = 16),
-#             legend.text = element_text(size = 14),
-#             legend.position = "right")
-#     
-#     # Print the plot
-#     print(combined_density_sex_plot)
-#     
-#     # Save the plot for the specific date/trial
-#     #ggsave(filename = paste0(output_dir, gsub("-", "", specific_date), "_density_calls_sex_plot_combined.png"), plot = combined_density_sex_plot)
-#     
-#   }
-# }
