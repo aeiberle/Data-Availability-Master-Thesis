@@ -1,6 +1,6 @@
 #This script can be used to synchronize all audio files in a folder
-#It currently does not save the synched files anywhere - it is just for testing
 #It creates a data frame of outliers to look into and a list of unsynched files and reasons they couldn't be synched
+#The data frame is then going to be saved as a .csv file 
 
 #install.packages("devtools")
 library(devtools)
@@ -8,7 +8,6 @@ library(devtools)
 library(cocomo)
 
 #path to folder containing files to synch
-#basedir <- '~/EAS_shared/meerkat/working/processed/acoustic/HM2017/2.5_machine_labels/'
 basedir <- '/mnt/EAS_ind/aeiberle/data/Audio_csv_Files/'
 
 #path to synch metadata file
@@ -60,6 +59,5 @@ for(i in 1:length(all_files)){
   
 }
 
-# Save labels_synched
+#Save labels_synched
 # write.csv(labels_synched, file = "/mnt/EAS_ind/aeiberle/data/labels_synched_2023.csv")
-
