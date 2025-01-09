@@ -1,4 +1,4 @@
-## Stats for the call density plots between sexes
+## Stats for the call density plots across social categories
 
 setwd("/mnt/EAS_ind/aeiberle/data/RDataFiles/")
 
