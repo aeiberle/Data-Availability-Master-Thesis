@@ -12,7 +12,7 @@ unique(labels_synched$label_name)
 # Replacing label_name's that contain "Playback" with "Recruitment Playback Track" 
 labels_synched$label_name <- ifelse(grepl("Playback", labels_synched$label_name), "Recruitment Playback Track", labels_synched$label_name)
 
-# Replacing label_name's that contain "xx" with "yy" 
+# Replacing label_name's that contain "fu xx+yy" with "zz" 
 labels_synched$label_name <- ifelse(
   labels_synched$label_name %in% c("fu soc+s", "fu sn+soc"), "s",
   ifelse(
@@ -49,7 +49,7 @@ labels_synched$t0_UTC <- ymd_hms(labels_synched$t0_UTC, tz = "UTC")
 labels_synched$tmid_UTC <- ymd_hms(labels_synched$tmid_UTC, tz = "UTC")
 labels_synched$tf_UTC <- ymd_hms(labels_synched$tf_UTC, tz = "UTC")
 
-# Create new dataframe for rows where label_name contains "sq"
+# Create new dataframe for rows where label_name contains "sq" for "sequence"
 sq_rows <- labels_synched %>% filter(grepl("sq ", label_name))
 
 # Create new dataframe for changing the t0_UTC for sq labels
@@ -91,6 +91,7 @@ labels_synched_2 <- labels_synched_2 %>% filter(!grepl("sq", label_name))
 cleaned_audio_df <- labels_synched_2[!is.na(labels_synched_2$label_name), ]
 cleaned_audio_df$X <- NULL
 
+# Rename ID_Code
 cleaned_audio_df$id_code <- ifelse(grepl("VSIF021", cleaned_audio_df$id_code), "VSIM021", cleaned_audio_df$id_code)
 cleaned_audio_df$id_code <- ifelse(grepl("VSIF10", cleaned_audio_df$id_code), "VSIF010", cleaned_audio_df$id_code)
 
@@ -98,9 +99,3 @@ unique(cleaned_audio_df$label_name)
 
 # Save cleaned DataFrame to a new CSV file
 # write.csv(cleaned_audio_df, file = "/mnt/EAS_ind/aeiberle/data/labels_synched_2023_preGD.csv", row.names = FALSE)
-
-
-#### For trimming purposes ####
-# cleaned_audio_df <- labels_synched[labels_synched$label_name %in% c("START", "END"), ]
-# For Playback-Times purposes
-# cleaned_audio_df <- labels_synched[labels_synched$label_name %in% c("Recruitment Playback Track"), ]
