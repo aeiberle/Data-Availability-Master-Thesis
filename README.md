@@ -26,24 +26,23 @@ Data was collected at the Kalahari Research Center in South Africa using:
 
 The repository contains the following R scripts:
 
-*   `1_new_sync_script.R`: New synchronization script.
+*   `1_new_sync_script.R`: New synchronization script to .
 *   `2_audio_cleaning.R`: Script for audio data cleaning.
-*   `2.1_audio_fusion_withGD.R`: Script for audio fusion with GD.
-*   `3_getting_points_script_new.R`: Script for obtaining points.
+*   `2.1_audio_fusion_withGD.R`: Script for audio fusion with GD group (GD group was excluded in acoustic analyses).
+*   `3_getting_points_script_new.R`: Script for obtaining spatial points of each individual.
 *   `4_audio_gps_timeline.R`: Script for creating an audio-GPS timeline.
-*   `5_call_type_density_plots.R`: Script for generating call type density plots.
+*   `5_call_type_density_plots.R`: Script for generating call type density plots over the experimental time window (1200 seconds).
 *   `5.1_call_type_density_plots_120secs.R`: Script for call type density plots (120 seconds).
-*   `6_change_point_analysis.R`: Script for change point analysis.
-*   `6.1_change_point_analysis_sex.R`: Script for change point analysis between sexes.
-*   `6.2_change_point_analysis_socialcat.R`: Script for change point analysis across social categories.
-*   `7_signal_propagation.R`: Script for analyzing signal propagation.
-*   `8_mean_distances_speaker.R`: Script for mean individual distances to speaker plots.
-*   `9_mobbing_recruitment_duration.R`: Script for analyzing mobbing and recruitment duration.
-*   `10_testing_pull_influence.R`: Script for testing pull influence.
+*   `6_change_point_analysis.R`: Script for change point analysis to detect playback elicited changes in call patterns for each call type.
+*   `6.1_change_point_analysis_sex.R`: Script for change point analysis to detect playback elicited changes in call patterns for each call type between sexes.
+*   `6.2_change_point_analysis_socialcat.R`: Script for change point analysis to detect playback elicited changes in call patterns for each call type across social categories.
+*   `7_signal_propagation.R`: Script for analyzing signal propagation to investigate the temporal and spatial patterns of individual vocal responses.
+*   `8_mean_distances_speaker.R`: Script to investigate the movement towards the speaker by calculating mean individual distances to the speaker.
+*   `9_mobbing_recruitment_duration.R`: Script for analyzing mobbing and recruitment duration in response to the treatments.
+*   `10_testing_pull_influence.R`: Script for pulls and anchors analysis to explore individual influences on group movements.
 *   `getting_points_for_veg_assessment.R`: Script for obtaining points for vegetation assessment.
-*   `Sample_sizes.R`: Script calculating sample sizes.
+*   `Sample_sizes.R`: Script calculating sample sizes that were used in acoustic and movement analyses.
 
-*(It would be very helpful to have a slightly more detailed description of each script if possible. Even a short sentence would improve understanding. If not available, this is still a good starting point)*
 
 ## Usage
 
@@ -53,4 +52,4 @@ These scripts are written in R and require an R environment to run. Specific R p
 
 ## Acknowledgements
 
-This work was conducted as part of an MSc thesis by Annika Eiberle at the University of Konstanz. Data collection was performed at the Kalahari Research Center in South Africa.
+This work was conducted as part of an MSc thesis by Annika Eiberle at the University of Konstanz, Germany. Data collection was performed at the Kalahari Research Center in South Africa.
